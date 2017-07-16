@@ -40,6 +40,8 @@ spec:
         env:
         - name: FLUENTD_ARGS
           value: --no-supervisor -q
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/google/auth/application_default_credentials.json
         resources:
           limits:
             memory: 300Mi
@@ -57,6 +59,8 @@ spec:
           readOnly: true
         - name: config-volume
           mountPath: /etc/fluent/config.d
+        - name: googleauth
+          mountPath: /etc/google/auth
         # Liveness probe is aimed to help in situarions where fluentd
         # silently hangs for no apparent reasons until manual restart.
         # The idea of this probe is that if fluentd is not queueing or
@@ -127,3 +131,6 @@ spec:
       - name: ssl-certs
         hostPath:
           path: /etc/ssl/certs
+      - name: googleauth
+        secret:
+          secretName: google-auth
